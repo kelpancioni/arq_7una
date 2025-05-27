@@ -1,15 +1,18 @@
 {
   "version": 1,
-  "author": "Rafael Souza",
+  "author": "Anonymous maker",
   "editor": "wokwi",
   "parts": [
-    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": -67.2, "left": -110.36, "attrs": {} },
-    { "type": "wokwi-potentiometer", "id": "pot1", "top": -78.1, "left": -317, "attrs": {} }
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -10.9, "left": -173, "attrs": {} }
   ],
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
     [ "esp:RX", "$serialMonitor:TX", "", [] ],
-    [ "esp:14", "esp:15", "green", [ "v0" ] ]
+    [ "esp:14", "esp:15", "green", [ "h0" ] ],
+    [ "pot1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "pot1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "pot1:SIG", "esp:34", "green", [ "v0" ] ]
   ],
   "dependencies": {}
 }
