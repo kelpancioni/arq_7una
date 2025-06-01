@@ -38,7 +38,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Frequência": "={{ $json.frequency }}",
+            "Frequência": "={{ $json.body.frequency }}",
             "Timestamp": "={{ $now.toFormat(\"dd/MM/yyyy HH:mm:ss\") }}"
           },
           "matchingColumns": [],
@@ -83,6 +83,108 @@
           "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analise a seguinte leitura de frequência:\n\nLeitura Atual:\nFrequência: {{ $('Webhook').item.json.body.frequency }} Hz\nTimestamp: {{ $('Webhook').item.json.body.timestamp }}\n\nCom base nas seguintes regras, classifique a frequência da \"Leitura Atual\" como \"normal\", \"pico\" ou \"anomalia\".\nA faixa de operação esperada para o sistema é de 100 Hz a 1750 Hz.\n- \"normal\": Se a frequência estiver entre 300 Hz e 1500 Hz (inclusive).\n- \"pico\": Se a frequência estiver acima de 1500 Hz.\n- \"anomalia\": Se a frequência estiver abaixo de 300 Hz.\n\nSua resposta DEVE conter APENAS UMA PALAVRA: \"normal\", \"pico\" ou \"anomalia\".",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        420,
+        0
+      ],
+      "id": "dcf37a31-6a4e-487a-89d6-638616d7dde4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9fc49cee-f480-46b6-a245-5e34e92bb9c3",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "=pico",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "bb15755b-7f6f-4b34-9299-62ea90f98bd7",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "anomalia",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        0
+      ],
+      "id": "82a60349-5b0f-457d-a355-ae705116dd07",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "model": "llama3-70b-8192",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        420,
+        220
+      ],
+      "id": "ad049b2e-fad2-4b2b-9f97-460e0594bfa5",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "D8hLoZZCC8mx0o50",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "victormedeiros2580@gmail.com",
+        "subject": "=ALERTA: Frequência {{ $('AI Agent').item.json.output }} Detectada! - {{ $('Webhook').item.json.body.frequency }} Hz",
+        "message": "=<p>Prezados,</p> <p>Uma condi&ccedil;&atilde;o de **ALERTA** foi detectada pelo sistema de monitoramento de frequ&ecirc;ncia.</p> <p><strong>Detalhes:</strong></p> <ul>     <li><strong>Classifica&ccedil;&atilde;o da IA:</strong> {{ $('AI Agent').item.json.output }}</li>     <li><strong>Frequ&ecirc;ncia Detectada:</strong> {{ $('Webhook').item.json.body.frequency }} Hz</li>     <li><strong>Timestamp da Leitura:</strong> {{ $('Webhook').item.json.body.timestamp }}</li> </ul> <p>Por favor, verifique o sistema imediatamente.</p> <p>Atenciosamente,<br>Sistema de Monitoramento Autom&aacute;tico</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1020,
+        -100
+      ],
+      "id": "d80493a0-4059-47e2-8c69-42a6affd62ad",
+      "name": "Gmail",
+      "webhookId": "5f78fcfc-26ef-4c6d-9deb-76411c850dc2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "qhCDAZyiJucVypip",
+          "name": "Gmail account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -97,13 +199,57 @@
           }
         ]
       ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "23735665-3916-4568-8799-f2d31c9ec54b",
+  "versionId": "7fc5ac79-992d-4d02-86a1-46a3daf19dd3",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "855e4a00504198316543e7cff2adc5924483d3dc1b36b6f2345b361ea9e1873e"
