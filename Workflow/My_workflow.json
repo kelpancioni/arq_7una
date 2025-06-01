@@ -39,7 +39,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "Frequência": "={{ $json.body.frequency }}",
-            "Timestamp": "={{ $now.toFormat(\"dd/MM/yyyy HH:mm:ss\") }}"
+            "Timestamp": "={{ $now }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -173,8 +173,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1020,
-        -100
+        1840,
+        -40
       ],
       "id": "d80493a0-4059-47e2-8c69-42a6affd62ad",
       "name": "Gmail",
@@ -183,6 +183,143 @@
         "gmailOAuth2": {
           "id": "qhCDAZyiJucVypip",
           "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1T4MgljpsabY0YsNXW-Yi7KRoKQhGEDvugDlPR4FntaA",
+          "mode": "list",
+          "cachedResultName": "Leituras ESP32",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T4MgljpsabY0YsNXW-Yi7KRoKQhGEDvugDlPR4FntaA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 259468797,
+          "mode": "list",
+          "cachedResultName": "Alertas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T4MgljpsabY0YsNXW-Yi7KRoKQhGEDvugDlPR4FntaA/edit#gid=259468797"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1080,
+        -20
+      ],
+      "id": "9554e8cf-a416-426f-9a9c-d7a12eda0f64",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "RGgaOmY6lSoVrsms",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all(); // Obtém todos os dados de entrada\n\nif (rows.length > 0) {\n    // Ordena os timestamps em ordem crescente\n    rows.sort((a, b) => new Date(a.json.Timestamp).getTime() - new Date(b.json.Timestamp).getTime());\n\n    // Obtém o último timestamp\n    const ultimoTimestamp = new Date(rows[rows.length - 1].json.Timestamp).getTime();\n    const agora = new Date().getTime();\n\n    // Define o intervalo desejado (X minutos)\n    const minutos = 10; // Altere para o número de minutos desejado\n    const intervalo = minutos * 60 * 1000; // Converte minutos para milissegundos\n\n    // Retorna apenas true ou false\n    return [{ json: { passouXMinutos: (agora - ultimoTimestamp) >= intervalo } }];\n} else {\n    return [{ json: { passouXMinutos: false } }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        -20
+      ],
+      "id": "ca06bb16-4679-4153-a29e-6c7a5600ef53",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d66c374c-0452-41e6-88e8-496309f62e1e",
+              "leftValue": "={{ $json.passouXMinutos }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        -20
+      ],
+      "id": "b1c3b1d4-ab44-4b1a-bfc7-80329e511909",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1T4MgljpsabY0YsNXW-Yi7KRoKQhGEDvugDlPR4FntaA",
+          "mode": "list",
+          "cachedResultName": "Leituras ESP32",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T4MgljpsabY0YsNXW-Yi7KRoKQhGEDvugDlPR4FntaA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 259468797,
+          "mode": "list",
+          "cachedResultName": "Alertas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T4MgljpsabY0YsNXW-Yi7KRoKQhGEDvugDlPR4FntaA/edit#gid=259468797"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now }}"
+          },
+          "matchingColumns": [
+            "Timestamp"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2060,
+        -40
+      ],
+      "id": "625707dd-5813-46be-bad1-b91640c13509",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "RGgaOmY6lSoVrsms",
+          "name": "Google Sheets account"
         }
       }
     }
@@ -226,7 +363,7 @@
       "main": [
         [
           {
-            "node": "Gmail",
+            "node": "Google Sheets1",
             "type": "main",
             "index": 0
           }
@@ -243,13 +380,57 @@
           }
         ]
       ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "7fc5ac79-992d-4d02-86a1-46a3daf19dd3",
+  "versionId": "c936a2bc-1ab1-42b2-b907-e639ca76d4ae",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "855e4a00504198316543e7cff2adc5924483d3dc1b36b6f2345b361ea9e1873e"
