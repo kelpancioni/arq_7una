@@ -1,0 +1,113 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "e9e8b9ec-734c-4152-9b4d-2687de0310ed",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "31f7fa6b-9630-402d-b59e-e43ba1aca056",
+      "name": "Webhook",
+      "webhookId": "e9e8b9ec-734c-4152-9b4d-2687de0310ed"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1T4MgljpsabY0YsNXW-Yi7KRoKQhGEDvugDlPR4FntaA",
+          "mode": "list",
+          "cachedResultName": "Leituras ESP32",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T4MgljpsabY0YsNXW-Yi7KRoKQhGEDvugDlPR4FntaA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Frequências",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T4MgljpsabY0YsNXW-Yi7KRoKQhGEDvugDlPR4FntaA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Frequência": "={{ $json.frequency }}",
+            "Timestamp": "={{ $now.toFormat(\"dd/MM/yyyy HH:mm:ss\") }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Frequência",
+              "displayName": "Frequência",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        0
+      ],
+      "id": "49ac646a-0cd1-4c8d-aafb-1d3747f19b2c",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "RGgaOmY6lSoVrsms",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "23735665-3916-4568-8799-f2d31c9ec54b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "855e4a00504198316543e7cff2adc5924483d3dc1b36b6f2345b361ea9e1873e"
+  },
+  "id": "yUD4EKTJOuvwbVNI",
+  "tags": []
+}
