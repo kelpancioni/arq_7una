@@ -167,7 +167,7 @@
       "parameters": {
         "sendTo": "victormedeiros2580@gmail.com",
         "subject": "=ALERTA: Frequência {{ $('AI Agent').item.json.output }} Detectada! - {{ $('Webhook').item.json.body.frequency }} Hz",
-        "message": "=<p>Prezados,</p> <p>Uma condi&ccedil;&atilde;o de **ALERTA** foi detectada pelo sistema de monitoramento de frequ&ecirc;ncia.</p> <p><strong>Detalhes:</strong></p> <ul>     <li><strong>Classifica&ccedil;&atilde;o da IA:</strong> {{ $('AI Agent').item.json.output }}</li>     <li><strong>Frequ&ecirc;ncia Detectada:</strong> {{ $('Webhook').item.json.body.frequency }} Hz</li>     <li><strong>Timestamp da Leitura:</strong> {{ $('Webhook').item.json.body.timestamp }}</li> </ul> <p>Por favor, verifique o sistema imediatamente.</p> <p>Atenciosamente,<br>Sistema de Monitoramento Autom&aacute;tico</p>",
+        "message": "=<p>Prezados,</p> <p>Uma condi&ccedil;&atilde;o de **ALERTA** foi detectada pelo sistema de monitoramento de frequ&ecirc;ncia.</p> <p><strong>Detalhes:</strong></p> <ul>     <li><strong>Classifica&ccedil;&atilde;o da IA:</strong> {{ $('AI Agent').item.json.output }}</li>     <li><strong>Frequ&ecirc;ncia Detectada:</strong> {{ $('Webhook').item.json.body.frequency }} Hz</li>     <li><strong>Timestamp da Leitura:</strong> {{ $('Google Sheets').item.json.Timestamp }} </li> </ul> <p>Por favor, verifique o sistema imediatamente.</p> <p>Atenciosamente,<br>Sistema de Monitoramento Autom&aacute;tico</p>",
         "options": {}
       },
       "type": "n8n-nodes-base.gmail",
@@ -426,11 +426,11 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "c936a2bc-1ab1-42b2-b907-e639ca76d4ae",
+  "versionId": "0bee4288-c0ee-4475-91de-e1afab7fc7d2",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "855e4a00504198316543e7cff2adc5924483d3dc1b36b6f2345b361ea9e1873e"
