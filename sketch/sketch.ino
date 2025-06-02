@@ -12,9 +12,9 @@
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-const char* ssid = "AP_91";
-const char* password = "senhaforte";
-const char* n8nWebhookUrl = "http://192.168.0.222:5678/webhook/c8d09c15-aa9a-4dc1-9837-18c1d1cfa414";
+const char* ssid = "UnivapWifi";
+const char* password = "universidade";
+const char* n8nWebhookUrl = "http://172.17.30.243:5678/webhook/c8d09c15-aa9a-4dc1-9837-18c1d1cfa414";
 
 const int inputPin  = 15;
 const int testPin   = 14;
